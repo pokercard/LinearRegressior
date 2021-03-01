@@ -1,4 +1,4 @@
-# LinearRegressior
+# LinearRegressor
 实践是真知之母
 
 本仓库特用于实现所学到的线性回归的算法，以及对各类包内部实现的比较。
