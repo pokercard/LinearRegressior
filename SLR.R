@@ -17,7 +17,8 @@ est_values<-SimpleLR(X,Y)
 
 #Estimate sigma
 #Using ML, MLE is equal to LSE 
-Est_Sigma<-function(x,y,est_values){
+Est_Sigma<-function(x,y){
+  est_values<-SimpleLR(x,y)
   b0<-est_values['b0']
   b1<-est_values['b1']
   n<-length(x)
@@ -25,22 +26,38 @@ Est_Sigma<-function(x,y,est_values){
   Biased_Sigma<-sum((y-(b0+b1*x))^2)/(n-2)
   return(c(Unbiased=Unbiased_Sigma,Biased=Biased_Sigma))
 }
-est_sigmas<-Est_Sigma(X,Y,est_values)
+est_sigmas<-Est_Sigma(X,Y)
 
 #To conduct several test
-SS_values<-function(x,y,est_values){
+SS_values<-function(x,y){
+  est_values<-SimpleLR(x,y)
   ybar<-mean(y)
   b0<-est_values['b0']
   b1<-est_values['b1']
   SSTO<-sum((y-ybar)^2)
-  SSR<-sum((y-(b0+b1*x))^2)
-  SSE<-SSTO-SSR
+  SSE<-sum((y-(b0+b1*x))^2)
+  SSR<-SSTO-SSE
   return(c(SSR=SSR,SSE=SSE,SSTO=SSTO))
 }
 
-ss_values<-SS_values(X,Y,est_values)
-
 #Goodness of fit test
+
+F.test<-function(x,y){
+  n<-length(x)
+  ss_values<-SS_values(x,y)
+  MSR<-ss_values['SSR']
+  MSE<-ss_values['SSE']/(n-2)
+  F.statistics<-MSR/MSE
+  P.value<-1-pf(F.statistics,1,n-2)
+  results<-c(F.statistics,P.value)
+  names(results)<-c('F.stat','P.value')
+  return(results)
+}
+
+#lack of fit test
+LF.test<-function(x,y){
+  
+}
 
 
 
@@ -49,3 +66,4 @@ ss_values<-SS_values(X,Y,est_values)
 
 
 #Residual Plots
+
